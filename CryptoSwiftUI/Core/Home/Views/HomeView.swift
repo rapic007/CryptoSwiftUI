@@ -11,11 +11,16 @@ struct HomeView: View {
     
     @EnvironmentObject private var vm: HomeViewModel
     @State private var showPortfolio: Bool = false
+    @State private var addToPortfolioView: Bool = false
     
     var body: some View {
         ZStack {
             Color.theme.background
                 .ignoresSafeArea()
+                .sheet(isPresented: $addToPortfolioView, content:{
+                    PortfolioView()
+                        .environmentObject(vm)
+                })
             
             VStack {
                 homeHeader
@@ -57,6 +62,11 @@ extension HomeView {
         HStack {
             CircleButtonView(iconName: showPortfolio ? "plus" : "info")
                 .animation(.none)
+                .onTapGesture {
+                    if showPortfolio {
+                        addToPortfolioView.toggle()
+                    }
+                }
                 .background(CircleButtonAnimationView(animate: $showPortfolio))
             Spacer()
             Text(showPortfolio ? "Portfolio" : "Live Prices")
@@ -105,6 +115,15 @@ extension HomeView {
             }
             Text("Price")
                 .frame(width: UIScreen.main.bounds.width / 3.5, alignment: .trailing)
+            
+            Button(action: {
+                withAnimation(.linear(duration: 2.0)) {
+                    vm.reloadData()
+                }
+            }, label: {
+                Image(systemName: "goforward")
+            })
+            .rotationEffect(Angle(degrees:  vm.isLoading ? 360 : 0), anchor: .center)
 
         }
         .font(.caption)

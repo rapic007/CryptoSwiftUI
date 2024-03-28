@@ -12,7 +12,6 @@ struct HomeStatsView: View {
     @EnvironmentObject private var vm: HomeViewModel
     @Binding var showPortfolio: Bool
     
-    
     var body: some View {
         HStack {
             ForEach(vm.statistic) { stat in
