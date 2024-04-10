@@ -149,16 +149,17 @@ class HomeViewModel: ObservableObject {
         
         let previousValue = portfolioCoins.map { coin -> Double in
             let currentValue = coin.currentHoldingsValue
-            guard let pecentChangeDouble = coin.priceChangePercentage24H else {
-                return 0.0
-            }
-            let pecentChange = pecentChangeDouble / 100
+            let pecentChange = (coin.priceChangePercentage24H ?? 0 ) / 100
             let previousValue = currentValue / (1 + pecentChange)
             return previousValue
         }
             .reduce(0, +)
         
-        let percentageChange = ((portfolioValue - previousValue)  / previousValue) * 100
+        var percentageChange = ((portfolioValue - previousValue)  / previousValue) * 100
+    
+        if previousValue == 0.00 {
+             percentageChange = 0.00
+        }
         
         let portfolio = Statistic(
             title: "Portfolio value",

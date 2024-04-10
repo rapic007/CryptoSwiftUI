@@ -1,10 +1,3 @@
-//
-//  Color.swift
-//  CryptoSwiftUI
-//
-//  Created by Влад  on 4.03.24.
-//
-
 import SwiftUI
 
 extension Color {

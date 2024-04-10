@@ -1,10 +1,3 @@
-//
-//  CryptoSwiftUIApp.swift
-//  CryptoSwiftUI
-//
-//  Created by Влад  on 4.03.24.
-//
-
 import SwiftUI
 
 @main
@@ -23,6 +16,7 @@ struct CryptoSwiftUIApp: App {
                 HomeView()
                     .navigationBarHidden(true)
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             .environmentObject(vm)
         }
     }

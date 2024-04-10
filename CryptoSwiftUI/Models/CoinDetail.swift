@@ -1,10 +1,3 @@
-//
-//  CoinDetailModel.swift
-//  CryptoSwiftUI
-//
-//  Created by Влад  on 4.04.24.
-//
-
 import SwiftUI
 
 //https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false
@@ -22,9 +15,9 @@ struct CoinDetail: Codable {
         case hashingAlgorithm = "hashing_algorithm"
     }
     
-//    var readableDescription: String? {
-////        return description?.en?.removingHTMLOccurances
-//    }
+    var readableDescription: String? {
+        return description?.en?.removingHTMLOccurances
+    }
 }
 
 struct Links: Codable {

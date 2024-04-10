@@ -1,10 +1,3 @@
-//
-//  HomeView.swift
-//  CryptoSwiftUI
-//
-//  Created by Влад  on 4.03.24.
-//
-
 import SwiftUI
 
 struct HomeView: View {
@@ -15,6 +8,7 @@ struct HomeView: View {
     @State private var addToPortfolioView: Bool = false
     @State private var selectedCoin: Coin? = nil
     @State private var showDetailView: Bool = false
+    @State private var showSettingView: Bool = false
     
     var body: some View {
         ZStack {
@@ -36,21 +30,30 @@ struct HomeView: View {
                 
                 if !showPortfolio {
                     allCoinsList
-                    .transition(.move(edge: .leading))
+                        .transition(.move(edge: .leading))
                 }
                 
                 if showPortfolio {
-                    portfolioCoinsList
-                        .transition(.move(edge: .trailing))
+                    ZStack(alignment: .top) {
+                        if vm.portfolioCoins.isEmpty && vm.searchText.isEmpty {
+                            portfolioEmptyText
+                        } else {
+                            portfolioCoinsList
+                        }
+                    }
+                    .transition(.move(edge: .trailing))
                 }
                 
                 Spacer(minLength: 0)
             }
+            .sheet(isPresented: $showSettingView) {
+                InfoView()
+            }
         }
         .background(
-        NavigationLink(destination: DetailLoadingView(coin: $selectedCoin),
-                       isActive: $showDetailView,
-                       label: { EmptyView() })
+            NavigationLink(destination: DetailLoadingView(coin: $selectedCoin),
+                           isActive: $showDetailView,
+                           label: { EmptyView() })
         )
     }
 }
@@ -73,6 +76,8 @@ extension HomeView {
                 .onTapGesture {
                     if showPortfolio {
                         addToPortfolioView.toggle()
+                    } else {
+                        showSettingView.toggle()
                     }
                 }
                 .background(CircleButtonAnimationView(animate: $showPortfolio))
@@ -118,6 +123,15 @@ extension HomeView {
             }
         }
         .listStyle(PlainListStyle())
+    }
+    
+    private var portfolioEmptyText: some View {
+        Text("You haven't added any coins to your portfolio yet! Click the + button to get started! 🧐")
+            .font(.callout)
+            .foregroundColor(Color.theme.accent)
+            .fontWeight(.medium)
+            .multilineTextAlignment(.center)
+            .padding(50)
     }
     
     private func segue(coin: Coin) {
@@ -187,7 +201,7 @@ extension HomeView {
                 Image(systemName: "goforward")
             })
             .rotationEffect(Angle(degrees:  vm.isLoading ? 360 : 0), anchor: .center)
-
+            
         }
         .font(.caption)
         .foregroundColor(Color.theme.secondaryText)

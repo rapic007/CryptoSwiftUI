@@ -5,8 +5,11 @@ class DetailViewModel: ObservableObject {
     
     @Published var overViewStatistics: [Statistic] = []
     @Published var additionalStaistics: [Statistic] = []
-    @Published var  coin: Coin
-    
+    @Published var coin: Coin
+    @Published var coinDescription: String? = nil
+    @Published var websiteURL: String? = nil
+    @Published var redditURL: String? = nil
+
     
     private let coinDetailService: CoinDetailDataService
     private var cancellables = Set<AnyCancellable>()
@@ -25,6 +28,14 @@ class DetailViewModel: ObservableObject {
             .sink { [weak self] returnedArrays in
                 self?.overViewStatistics = returnedArrays.overView
                 self?.additionalStaistics = returnedArrays.additional
+            }
+            .store(in: &cancellables)
+        
+        coinDetailService.$coinDetails
+            .sink { [weak self] returnedCoinDetails in
+                self?.coinDescription = returnedCoinDetails?.readableDescription
+                self?.websiteURL = returnedCoinDetails?.links?.homepage?.first
+                self?.redditURL = returnedCoinDetails?.links?.subredditURL
             }
             .store(in: &cancellables)
     }
@@ -66,7 +77,7 @@ class DetailViewModel: ObservableObject {
         let low = coin.low24H?.asCurrensyWith6Decimals() ?? "n/a"
         let lowStat = Statistic(title: "24h Low", value: low)
         
-        let priceChange = coin.priceChangePercentage24H?.asCurrensyWith6Decimals() ?? "n/a"
+        let priceChange = coin.priceChange24H?.asCurrensyWith6Decimals() ?? "n/a"
         let pricePercentChange  = coin.priceChangePercentage24H
         let priceChangeStat = Statistic(title: "24h Price Change", value: priceChange, percentageChange: pricePercentChange)
         
