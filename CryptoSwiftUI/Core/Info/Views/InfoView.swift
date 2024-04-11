@@ -7,8 +7,13 @@ struct InfoView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                coinGeckoSection
+            ZStack {
+                Color.theme.background
+                    .ignoresSafeArea()
+                List {
+                    coinGeckoSection
+                        .listRowBackground(Color.theme.background)
+                }
             }
             .listStyle(GroupedListStyle())
             .navigationTitle("Info")
